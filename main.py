@@ -44,16 +44,16 @@ def check_link(link, mode, sheet, i, retries):
         else:
             return False
     except requests.exceptions.SSLError as e:
-        with open("log.txt", "a") as file:
+        with open("result/log.txt", "a") as file:
             file.write(f"An SSL error occurred: {e}")
         print(f"An SSL error occurred: {e}")
         if retries > 0:
-            with open("log.txt", "a") as file:
+            with open("result/log.txt", "a") as file:
                 file.write(f"Retrying ({retries} attempts left)...")
             print(f"Retrying ({retries} attempts left)...")
             return check_link(link, mode, sheet, i, retries=retries - 1)
         else:
-            with open("log.txt", "a") as file:
+            with open("result/log.txt", "a") as file:
                 file.write("Max retries exceeded. Unable to fetch the link.")
             print("Max retries exceeded. Unable to fetch the link.")
             if mode == 1:
@@ -62,7 +62,7 @@ def check_link(link, mode, sheet, i, retries):
                 sheet[f'I{i}'] = "bad site!"
             return False
     except Exception as e:
-        with open("log.txt", "a") as file:
+        with open("result/log.txt", "a") as file:
             file.write(f"An unexpected error occurred: {e}")
         print(f"An unexpected error occurred: {e}")
         if mode == 1:
@@ -73,12 +73,12 @@ def check_link(link, mode, sheet, i, retries):
 
 
 def get_data(sheet, wb):
-    with open(f"result/log.txt", "w") as file:
-        file.write("")
+    # with open("result/log.txt", "w") as file:
+    #     file.write("")
 
     i = 2
     while True:
-        with open("log.txt", "a") as file:
+        with open("result/log.txt", "a") as file:
             file.write(f"Row {i}\n")
 
         print(f"{i}")
