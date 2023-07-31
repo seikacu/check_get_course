@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from openpyxl.utils.exceptions import InvalidFileException
 from openpyxl import load_workbook
+from builtins import str
 
 
 def get_wb():
@@ -16,12 +17,12 @@ def get_sheet(wb:load_workbook):
     return sheet
 
 
-def check_link(link, mode, sheet, i, retries):
+def check_link(link:str, mode, sheet, i, retries):
     try:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
         }
-        r = requests.get(url=link, headers=headers)
+        r = requests.get(url=link.strip(), headers=headers)
         
         s = link.split("/")
         # l = len(s)
@@ -38,6 +39,17 @@ def check_link(link, mode, sheet, i, retries):
              
         soup = BeautifulSoup(src, "lxml")
         # comments = soup.find_all(class_=re.compile(r'\bgc-comment\b'))
+        
+        gc = soup.find_all(lambda tag: tag.has_attr('class') and 'gc-user-guest' in tag['class'])
+        if len(gc) > 0:
+            with open("result/log.txt", "a") as file:
+                file.write(f"\nIs GC_USER in URL: {nameFile} in row {i}")
+            if mode == 1:
+                sheet[f'H{i}'] = "gc-user-guest"
+            if mode == 2:
+               sheet[f'I{i}'] = "gc-user-guest"
+            print(f"\nIs GC_USER in URL: {nameFile}")
+        
         comments = soup.find_all(lambda tag: tag.has_attr('class') and 'gc-comment' in tag['class'])
         if len(comments) > 0:
             return True
