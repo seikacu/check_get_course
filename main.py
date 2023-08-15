@@ -7,6 +7,7 @@ from openpyxl import load_workbook
 from builtins import str
 
 
+
 def get_wb():
     wb = load_workbook("result/DataExport.xlsx")
     return wb
